@@ -31,10 +31,6 @@
 
 <br>
 
-<p align="center">
-  <img alt="Frontend" src=".github/devradar.png" width="100%">
-</p>
-
 ## :rocket: Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
