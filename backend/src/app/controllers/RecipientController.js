@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
+import User from '../models/User';
 
 class RecipientController {
   // Método para mostrar todos os recipients
@@ -43,6 +44,14 @@ class RecipientController {
 
     if (recipient) {
       return res.status(400).json({ error: 'Recipient already exists' });
+    }
+
+    const checkUserProvider = await User.findOne({
+      where: { id: req.userId, provider: true },
+    });
+
+    if (!checkUserProvider) {
+      return res.status(401).json({ error: 'User is not a provider' });
     }
 
     const { id } = await Recipient.create(req.body);
