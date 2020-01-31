@@ -16,5 +16,6 @@ routes.use(authMiddleware);
 
 routes.post('/recipients', RecipientController.store);
 routes.get('/recipients', RecipientController.index);
+routes.put('/recipients/edit/:id', RecipientController.update);
 
 export default routes;

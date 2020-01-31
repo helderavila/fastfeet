@@ -5,6 +5,7 @@ import User from '../models/User';
 import authConfig from '../../config/auth';
 
 class SessionController {
+  // Método para logar
   async store(req, res) {
     const schema = Yup.object().shape({
       email: Yup.string().required(),
