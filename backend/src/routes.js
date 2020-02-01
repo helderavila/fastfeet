@@ -4,6 +4,7 @@ import multer from 'multer';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
+import FileController from './app/controllers/FileController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -19,9 +20,7 @@ routes.get('/recipients/:id', RecipientController.show);
 
 routes.use(authMiddleware);
 
-routes.post('/files', upload.single('file'), (req, res) => {
-  return res.json({ ok: true });
-});
+routes.post('/files', upload.single('file'), FileController);
 
 routes.post('/recipients', RecipientController.store);
 routes.get('/recipients', RecipientController.index);
