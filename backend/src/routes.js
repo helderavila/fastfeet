@@ -28,5 +28,8 @@ routes.get('/recipients', RecipientController.index);
 routes.put('/recipients/edit/:id', RecipientController.update);
 
 routes.post('/deliverers', DelivererController.store);
+routes.get('/deliverers', DelivererController.index);
+routes.put('/deliverers/edit/:id', DelivererController.update);
+routes.delete('/deliverers/delete/:id', DelivererController.delete);
 
 export default routes;
