@@ -14,14 +14,6 @@ class DelivererController {
       return res.status(400).json({ error: 'Validation Fails' });
     }
 
-    const checkUserProvider = await User.findOne({
-      where: { id: req.userId, provider: true },
-    });
-
-    if (!checkUserProvider) {
-      return res.status(401).json({ error: 'You are not a provider' });
-    }
-
     const { name, email, avatar_id } = req.body;
 
     const deliverer = await Deliverer.create({
@@ -34,14 +26,6 @@ class DelivererController {
   }
 
   async index(req, res) {
-    const checkUserProvider = await User.findOne({
-      where: { id: req.userId, provider: true },
-    });
-
-    if (!checkUserProvider) {
-      return res.status(401).json({ error: 'You are not a provider' });
-    }
-
     const deliverers = await Deliverer.findAll();
 
     return res.json(deliverers);

@@ -10,6 +10,7 @@ import OrderController from './app/controllers/OrderController';
 import PackageController from './app/controllers/PackageController';
 
 import authMiddleware from './app/middlewares/auth';
+import authProvider from './app/middlewares/authProvider';
 
 import multerConfig from './config/multer';
 
@@ -32,14 +33,18 @@ routes.post('/recipients', RecipientController.store);
 routes.get('/recipients', RecipientController.index);
 routes.put('/recipients/edit/:id', RecipientController.update);
 
-routes.post('/deliverers', DelivererController.store);
-routes.get('/deliverers', DelivererController.index);
-routes.put('/deliverers/edit/:id', DelivererController.update);
-routes.delete('/deliverers/delete/:id', DelivererController.delete);
+routes.post('/deliverers', authProvider, DelivererController.store);
+routes.get('/deliverers', authProvider, DelivererController.index);
+routes.put('/deliverers/edit/:id', authProvider, DelivererController.update);
+routes.delete(
+  '/deliverers/delete/:id',
+  authProvider,
+  DelivererController.delete
+);
 
-routes.post('/orders', OrderController.store);
-routes.get('/orders', OrderController.index);
-routes.put('/orders/edit/:id', OrderController.update);
-routes.delete('/orders/delete/:id', OrderController.delete);
+routes.post('/orders', authProvider, OrderController.store);
+routes.get('/orders', authProvider, OrderController.index);
+routes.put('/orders/edit/:id', authProvider, OrderController.update);
+routes.delete('/orders/delete/:id', authProvider, OrderController.delete);
 
 export default routes;
