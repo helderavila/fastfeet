@@ -7,6 +7,7 @@ import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DelivererController from './app/controllers/DelivererController';
 import OrderController from './app/controllers/OrderController';
+import PackageController from './app/controllers/PackageController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -19,6 +20,9 @@ const routes = Router();
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
 routes.get('/recipients/:id', RecipientController.show);
+
+routes.put('/orders/withdraw/:orderId', PackageController.start);
+routes.put('/orders/end/:orderId', PackageController.end);
 
 routes.use(authMiddleware);
 
