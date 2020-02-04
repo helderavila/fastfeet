@@ -1,5 +1,15 @@
-import { isBefore, isAfter, setSeconds, setMinutes, setHours } from 'date-fns';
+import {
+  isBefore,
+  isAfter,
+  setSeconds,
+  setMinutes,
+  setHours,
+  startOfDay,
+  endOfDay,
+} from 'date-fns';
+import { Op } from 'sequelize';
 import Order from '../models/Order';
+import Deliverer from '../models/Deliverer';
 
 class PackageController {
   async start(req, res) {
@@ -24,8 +34,25 @@ class PackageController {
         .status(401)
         .json({ error: 'The package can only be taken between 9am and 6pm' });
     }
-    order.start_date = new Date();
 
+    const date = new Date();
+
+    const checkOrderDate = await Order.findAll({
+      where: {
+        deliverer_id: req.body.deliverer_id,
+        start_date: {
+          [Op.between]: [startOfDay(date), endOfDay(date)],
+        },
+      },
+    });
+
+    if (checkOrderDate.length > 4) {
+      return res
+        .status(401)
+        .json({ error: 'You can only takes 5 orders today' });
+    }
+
+    order.start_date = new Date();
     await order.save();
 
     return res.json({ ok: true });
@@ -47,6 +74,40 @@ class PackageController {
     order.save();
 
     return res.json(order);
+  }
+
+  async index(req, res) {
+    const delivererExists = await Deliverer.findByPk(req.params.id);
+
+    if (!delivererExists) {
+      return res.status(401).json({ error: 'Deliverer not found' });
+    }
+
+    const orders = await Order.findAll({
+      where: {
+        deliverer_id: req.params.id,
+        start_date: null,
+        canceled_at: null,
+        end_date: null,
+      },
+    });
+
+    if (!orders) {
+      return res.status(400).json({ error: 'Orders not found' });
+    }
+    return res.json(orders);
+  }
+
+  async show(req, res) {
+    const orders = await Order.findAll({
+      where: {
+        deliverer_id: req.params.id,
+        end_date: {
+          [Op.not]: null,
+        },
+      },
+    });
+    return res.json(orders);
   }
 }
 

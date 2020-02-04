@@ -24,6 +24,8 @@ routes.get('/recipients/:id', RecipientController.show);
 
 routes.put('/orders/withdraw/:orderId', PackageController.start);
 routes.put('/orders/end/:orderId', PackageController.end);
+routes.get('/orders/deliverer/:id', PackageController.index);
+routes.get('/orders/deliverer/:id/deliveries', PackageController.show);
 
 routes.use(authMiddleware);
 
