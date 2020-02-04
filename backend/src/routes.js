@@ -105,5 +105,6 @@ routes.get('/orders/problems', OrderWithProblemController.index);
 
 // Verificar problemas de uma unica encomenda
 routes.get('/orders/:orderId/problems', OrderProblems.index);
+routes.put('/problem/:problemId/cancel-order', OrderProblems.update);
 
 export default routes;
