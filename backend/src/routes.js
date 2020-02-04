@@ -12,6 +12,8 @@ import OrderCheckOutController from './app/controllers/OrderCheckOutController';
 import OrderOpenedController from './app/controllers/OrderOpenedController';
 import OrderClosedController from './app/controllers/OrderClosedController';
 import SignatureController from './app/controllers/SignatureController';
+import OrderWithProblemController from './app/controllers/OrdersWithProblemController';
+import CreateOrderProblem from './app/controllers/CreateOrderProblem';
 
 import authMiddleware from './app/middlewares/auth';
 import authProvider from './app/middlewares/authProvider';
@@ -47,6 +49,9 @@ routes.get('/orders/deliverer/:id', OrderOpenedController.index);
 
 // Exibir todos os pacotes do entregador que foram entregues
 routes.get('/orders/deliverer/:id/deliveries', OrderClosedController.index);
+
+// Criar um problema para encomenda
+routes.post('/orders/:orderId/problems', CreateOrderProblem.store);
 
 // Middleware para verificar token
 routes.use(authMiddleware);
@@ -92,5 +97,9 @@ routes.put('/orders/edit/:id', authProvider, OrderController.update);
 
 // Deletar alguma entrega
 routes.delete('/orders/delete/:id', authProvider, OrderController.delete);
+
+// Admin order problems
+// Verificar todas as encomendas que tem algum problema
+routes.get('/orders/problems', OrderWithProblemController.index);
 
 export default routes;
