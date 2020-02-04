@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 import Deliverer from '../models/Deliverer';
-import User from '../models/User';
 
 class DelivererController {
   async store(req, res) {
