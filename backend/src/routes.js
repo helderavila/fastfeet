@@ -14,6 +14,7 @@ import OrderClosedController from './app/controllers/OrderClosedController';
 import SignatureController from './app/controllers/SignatureController';
 import OrderWithProblemController from './app/controllers/OrdersWithProblemController';
 import CreateOrderProblem from './app/controllers/CreateOrderProblem';
+import OrderProblems from './app/controllers/OrderProblems';
 
 import authMiddleware from './app/middlewares/auth';
 import authProvider from './app/middlewares/authProvider';
@@ -101,5 +102,8 @@ routes.delete('/orders/delete/:id', authProvider, OrderController.delete);
 // Admin order problems
 // Verificar todas as encomendas que tem algum problema
 routes.get('/orders/problems', OrderWithProblemController.index);
+
+// Verificar problemas de uma unica encomenda
+routes.get('/orders/:orderId/problems', OrderProblems.index);
 
 export default routes;
