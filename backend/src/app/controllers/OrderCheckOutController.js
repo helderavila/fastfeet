@@ -1,4 +1,5 @@
 import Order from '../models/Order';
+import Signature from '../models/Signature';
 
 class OrderCheckOutController {
   async update(req, res) {
@@ -11,6 +12,18 @@ class OrderCheckOutController {
     }
 
     const order = await Order.findOne({ where: { id: req.params.orderId } });
+
+    if (order.start_date === null) {
+      return res
+        .status(401)
+        .json({ error: 'You cant checkout without checkin' });
+    }
+
+    const signature = await Signature.findByPk(req.body.signature_id);
+
+    if (!signature) {
+      return res.status(401).json({ error: 'Signature not found' });
+    }
 
     order.end_date = new Date();
 

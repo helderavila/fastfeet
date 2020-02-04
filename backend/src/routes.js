@@ -11,6 +11,7 @@ import OrderCheckInController from './app/controllers/OrderCheckInController';
 import OrderCheckOutController from './app/controllers/OrderCheckOutController';
 import OrderOpenedController from './app/controllers/OrderOpenedController';
 import OrderClosedController from './app/controllers/OrderClosedController';
+import SignatureController from './app/controllers/SignatureController';
 
 import authMiddleware from './app/middlewares/auth';
 import authProvider from './app/middlewares/authProvider';
@@ -35,6 +36,11 @@ routes.put('/orders/checkin/:orderId', OrderCheckInController.update);
 
 // Entrega da encomenda
 routes.put('/orders/checkout/:orderId', OrderCheckOutController.update);
+routes.post(
+  '/orders/checkout/:orderId/signature',
+  upload.single('file'),
+  SignatureController.store
+);
 
 // Exibir todos os pacotes disponiveis para retirada
 routes.get('/orders/deliverer/:id', OrderOpenedController.index);

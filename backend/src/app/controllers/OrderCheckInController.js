@@ -12,6 +12,7 @@ import Order from '../models/Order';
 
 class OrderCheckInController {
   async update(req, res) {
+    // Procurar pelo id no banco de dados
     const checkId = await Order.findOne({
       where: { deliverer_id: req.body.deliverer_id },
     });
@@ -51,10 +52,16 @@ class OrderCheckInController {
         .json({ error: 'You can only takes 5 orders today' });
     }
 
+    if (order.start_date !== null) {
+      return res
+        .status(401)
+        .json({ error: 'You can only takes the package one time' });
+    }
+
     order.start_date = new Date();
     await order.save();
 
-    return res.json({ ok: true });
+    return res.json({ sucesso: 'Sucess' });
   }
 }
 

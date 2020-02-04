@@ -3,12 +3,13 @@ import Deliverer from '../models/Deliverer';
 
 class DelivererController {
   async store(req, res) {
+    // Schema de validação
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required(),
       avatar_id: Yup.number().required(),
     });
-
+    // Verificar se o schema e valido
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation Fails' });
     }
@@ -31,11 +32,13 @@ class DelivererController {
   }
 
   async update(req, res) {
+    // Schema de validação
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().required(),
     });
 
+    // Verificar se o schema é valido
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation Fails' });
     }
@@ -43,7 +46,9 @@ class DelivererController {
     const { email } = req.body;
     const deliverer = await Deliverer.findByPk(req.params.id);
 
+    // Verificar se o email é diferente do email atual
     if (email && email !== deliverer.email) {
+      // Verificar se o entregador existe
       const delivererExists = await Deliverer.findOne({ where: { email } });
       if (delivererExists) {
         return res.status(400).json({ error: 'Deliverer already exists' });

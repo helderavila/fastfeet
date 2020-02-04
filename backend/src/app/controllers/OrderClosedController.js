@@ -11,6 +11,7 @@ class OrderClosedController {
         },
       },
     });
+
     return res.json(orders);
   }
 }
