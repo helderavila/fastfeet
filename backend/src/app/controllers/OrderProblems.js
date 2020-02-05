@@ -1,7 +1,8 @@
 import OrderProblem from '../models/OrderProblem';
 import Deliverer from '../models/Deliverer';
 import Order from '../models/Order';
-import Mail from '../../lib/Mail';
+import Queue from '../../lib/Queue';
+import CancellationMail from '../jobs/CancellationMail';
 
 class OrderProblems {
   async index(req, res) {
@@ -29,16 +30,10 @@ class OrderProblems {
 
     order.save();
 
-    await Mail.sendEmail({
-      to: `${deliverer.name} <${deliverer.email}>`,
-      subject: 'Uma encomenda sua foi cancelada!',
-      template: 'cancellation',
-      context: {
-        deliverer: deliverer.name,
-        id: order.id,
-        product: order.product,
-        reason: orderId.description,
-      },
+    await Queue.add(CancellationMail.key, {
+      order,
+      deliverer,
+      orderId,
     });
 
     return res.json(order);

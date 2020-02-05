@@ -2,7 +2,8 @@ import * as Yup from 'yup';
 import Order from '../models/Order';
 import Recipient from '../models/Recipient';
 import Deliverer from '../models/Deliverer';
-import Mail from '../../lib/Mail';
+import Queue from '../../lib/Queue';
+import CreateOrderEmail from '../jobs/CreateOrderEmail';
 
 class OrderController {
   async store(req, res) {
@@ -23,20 +24,10 @@ class OrderController {
 
     const order = await Order.create(req.body);
 
-    await Mail.sendEmail({
-      to: `${deliverer.name} <${deliverer.email}>`,
-      subject: 'Uma nova encomenda disponivel!',
-      template: 'create',
-      context: {
-        deliverer: deliverer.name,
-        product,
-        name: recipient.name,
-        street: recipient.street,
-        number: recipient.number,
-        state: recipient.state,
-        city: recipient.city,
-        postcode: recipient.postcode,
-      },
+    await Queue.add(CreateOrderEmail.key, {
+      recipient,
+      deliverer,
+      product,
     });
 
     return res.json(order);
