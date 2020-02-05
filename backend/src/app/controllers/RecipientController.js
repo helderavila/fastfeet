@@ -5,8 +5,12 @@ import User from '../models/User';
 class RecipientController {
   // Método para mostrar todos os recipients
   async index(req, res) {
-    const recipient = await Recipient.findAll();
-    return res.json(recipient);
+    const recipients = await Recipient.findAll();
+    // Verifica se existe destinarios no banco de dados
+    if (!recipients) {
+      return res.status(400).json({ error: 'Recipient not found' });
+    }
+    return res.json(recipients);
   }
 
   // Método para mostrar um recipient
@@ -14,6 +18,10 @@ class RecipientController {
     const { id } = req.params;
 
     const recipient = await Recipient.findOne({ where: { id } });
+    // Verifica se existe um destinario no banco de dados
+    if (!recipient) {
+      return res.status(400).json({ error: 'Recipient not found' });
+    }
 
     return res.json({
       recipient,
@@ -32,6 +40,7 @@ class RecipientController {
       postcode: Yup.string().required(),
     });
 
+    // Verifica se os dados sao validos
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
@@ -41,7 +50,7 @@ class RecipientController {
     const recipient = await Recipient.findOne({
       where: { name, number, postcode },
     });
-
+    // Verifica se ja nao existe um destinario no banco de dados
     if (recipient) {
       return res.status(400).json({ error: 'Recipient already exists' });
     }
@@ -49,7 +58,7 @@ class RecipientController {
     const checkUserProvider = await User.findOne({
       where: { id: req.userId, provider: true },
     });
-
+    // Verifica se o usuario é um admin
     if (!checkUserProvider) {
       return res.status(401).json({ error: 'User is not a provider' });
     }

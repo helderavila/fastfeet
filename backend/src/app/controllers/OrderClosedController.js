@@ -12,6 +12,10 @@ class OrderClosedController {
       },
     });
 
+    if (!orders) {
+      return res.status(400).json({ error: 'Orders not found' });
+    }
+
     return res.json(orders);
   }
 }

@@ -13,8 +13,13 @@ class DelivererController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation Fails' });
     }
-
     const { name, email, avatar_id } = req.body;
+
+    if (await Deliverer.findOne({ where: { email } })) {
+      return res
+        .status(400)
+        .json({ error: 'Deliverer with that email already exists' });
+    }
 
     const deliverer = await Deliverer.create({
       avatar_id,
@@ -27,6 +32,10 @@ class DelivererController {
 
   async index(req, res) {
     const deliverers = await Deliverer.findAll();
+
+    if (!deliverers) {
+      return res.status(400).json({ error: 'Deliverers not found' });
+    }
 
     return res.json(deliverers);
   }

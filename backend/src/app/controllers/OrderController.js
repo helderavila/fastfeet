@@ -1,3 +1,4 @@
+import * as Yup from 'yup';
 import Order from '../models/Order';
 import Recipient from '../models/Recipient';
 import Deliverer from '../models/Deliverer';
@@ -5,6 +6,16 @@ import Mail from '../../lib/Mail';
 
 class OrderController {
   async store(req, res) {
+    const schema = Yup.object().shape({
+      deliverer_id: Yup.number().required(),
+      recipient_id: Yup.number().required(),
+      product: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation Fail' });
+    }
+
     const { deliverer_id, product, recipient_id } = req.body;
 
     const deliverer = await Deliverer.findByPk(deliverer_id);

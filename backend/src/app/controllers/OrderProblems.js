@@ -10,6 +10,12 @@ class OrderProblems {
         order_id: req.params.orderId,
       },
     });
+    // Verifica se existe problema com a ordem
+    if (!order) {
+      return res
+        .status(400)
+        .json({ error: 'Doesnt have problem with that order' });
+    }
 
     return res.json(order);
   }

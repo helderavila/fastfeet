@@ -11,7 +11,7 @@ class UserController {
         .required()
         .min(6),
     });
-
+    // Verifica se os dados inseridos são validos
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation Fails' });
     }
@@ -19,7 +19,7 @@ class UserController {
     const emailExists = await User.findOne({
       where: { email: req.body.email },
     });
-
+    // Verifica se o usuario ja existe no banco de dados
     if (emailExists) {
       return res.status(400).json({ error: 'User already exists' });
     }
